@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rastreador de Tiempo de Tareas con Comentarios</title>
+<style>
+  body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+  .container { width: 80%; margin: auto; }
+  .panel { background-color: #fff; padding: 20px; margin-top: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+  .tarea { margin-bottom: 10px; }
+  button { padding: 10px; margin-top: 10px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; }
+  button:hover { background-color: #0056b3; }
+  #tareasActivas { margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Rastreador de Tiempo de Tareas con Comentarios</h2>
+
+  <div class="panel">
+    <input type="text" id="nombreTarea" placeholder="Nombre de la tarea">
+    <button onclick="agregarTarea()">Nueva Tarea</button>
+  </div>
+
+  <div id="tareasActivas" class="panel"></div>
+
+  <button onclick="exportarCSV()">Exportar a CSV</button>
+
+  <button onclick="resetear()">Resetear Pantalla</button>
+
+</div>
+
+<script>
+let tareas = {};
+
+function agregarTarea() {
+  let nombreTarea = document.getElementById('nombreTarea').value;
+  if (nombreTarea && !tareas[nombreTarea]) {
+    let tareaDiv = document.createElement('div');
+    tareaDiv.className = 'tarea';
+    tareaDiv.innerHTML = `
+      <input type="text" placeholder="Resumen de la tarea" id="resumen-${nombreTarea}">
+      <button onclick="terminarTarea('${nombreTarea}')">Terminar Tarea</button>
+      <div id="comentarios-${nombreTarea}"></div>
+      <input type="text" placeholder="Añade un comentario" id="comentario-${nombreTarea}">
+      <button onclick="agregarComentario('${nombreTarea}')">Comentar</button>
+      <pre id="log-${nombreTarea}"></pre>
+    `;
+    document.getElementById('tareasActivas').appendChild(tareaDiv);
+    tareas[nombreTarea] = { inicio: new Date(), comentarios: [] };
+    document.getElementById(log-${nombreTarea}).textContent += Tarea "${nombreTarea}" iniciada a las ${tareas[nombreTarea].inicio.toLocaleTimeString()}.\n;
+    document.getElementById('nombreTarea').value = ''; // Limpiar el campo de texto
+  }
+}
+
+function terminarTarea(nombreTarea) {
+  let fin = new Date();
+  let duracion = (fin - tareas[nombreTarea].inicio) / 60000; // Duración en minutos
+  let resumenTarea = document.getElementById(resumen-${nombreTarea}).value;
+  tareas[nombreTarea].fin = fin;
+  tareas[nombreTarea].duracion = duracion.toFixed(2); // Redondear a dos decimales
+  tareas[nombreTarea].resumen = resumenTarea;
+  document.getElementById(log-${nombreTarea}).textContent += Tarea "${nombreTarea}" terminada a las ${fin.toLocaleTimeString()}.\n;
+  document.getElementById(log-${nombreTarea}).textContent += Duración: ${duracion.toFixed(2)} minutos.\n;
+  document.getElementById(log-${nombreTarea}).textContent += Resumen: ${resumenTarea}\n\n;
+}
+
+function agregarComentario(nombreTarea) {
+  let comentario = document.getElementById(comentario-${nombreTarea}).value;
+  if (comentario) {
+    tareas[nombreTarea].comentarios.push(comentario);
+    let comentariosDiv = document.getElementById(comentarios-${nombreTarea});
+    let comentarioElement = document.createElement('p');
+    comentarioElement.textContent = comentario;
+    comentariosDiv.appendChild(comentarioElement);
+    document.getElementById(comentario-${nombreTarea}).value = ''; // Limpiar el campo de texto
+  }
+}
+
+function exportarCSV() {
+  let csvContent = "data:text/csv;charset=utf-8,";
+  csvContent += "Nombre de la Tarea,Inicio,Fin,Duración (minutos),Resumen\n";
+  Object.keys(tareas).forEach(function(nombreTarea) {
+    let tarea = tareas[nombreTarea];
+    csvContent += ${nombreTarea},${tarea.inicio.toISOString()},${tarea.fin.toISOString()},${tarea.duracion},"${tarea.resumen}"\n;
+  });
+  var encodedUri = encodeURI(csvContent);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "tareas.csv");
+  document.body.appendChild(link);
+  link.click();
+}
+
+function resetear() {
+  document.getElementById('tareasActivas').innerHTML = '';
+  tareas = {};
+}
+
+</script>
+
+</body>
+</html>
