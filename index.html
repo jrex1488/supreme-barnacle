@@ -54,6 +54,7 @@ function agregarTarea() {
     document.getElementById('nombreTarea').value = ''; // Limpiar el campo de texto
   }
 }
+  
 function terminarTarea(nombreTarea) {
   let fin = new Date();
   let duracion = (fin - tareas[nombreTarea].inicio) / 60000; // Duración en minutos
